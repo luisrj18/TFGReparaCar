@@ -1,0 +1,34 @@
+package com.reparacar.service;
+
+import com.reparacar.dto.TallerDTO;
+
+import java.util.List;
+
+public interface TallerService {
+
+    // Crear un nuevo taller
+    TallerDTO crearTaller(TallerDTO tallerDTO);
+
+    // Obtener todos los talleres
+    List<TallerDTO> obtenerTodosTalleres();
+
+    // Obtener un taller por ID
+    TallerDTO obtenerTallerPorId(Long id);
+
+    // Actualizar un taller existente
+    TallerDTO actualizarTaller(Long id, TallerDTO tallerDTO);
+
+    // Eliminar un taller
+    void eliminarTaller(Long id);
+
+    // Buscar talleres por nombre
+    List<TallerDTO> buscarTalleresPorNombre(String nombre);
+
+    // Buscar talleres por dirección
+    List<TallerDTO> buscarTalleresPorDireccion(String direccion);
+
+    // Buscar talleres por servicio ofrecido
+    List<TallerDTO> buscarTalleresPorServicio(String servicio);
+
+	List<TallerDTO> buscarTalleres(String nombre, String direccion, String servicio);
+}

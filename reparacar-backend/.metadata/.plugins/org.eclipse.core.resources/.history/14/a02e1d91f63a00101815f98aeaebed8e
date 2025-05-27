@@ -1,0 +1,27 @@
+package com.reparacar.controller;
+
+import com.reparacar.dto.ClienteDTO;
+import com.reparacar.dto.LoginDTO;
+import com.reparacar.service.ClienteService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@CrossOrigin(origins = "http://localhost:4200")
+@RestController
+@RequestMapping("/api/auth")
+public class AuthenticationController {
+	
+	
+	@PostMapping("/login")
+	public ResponseEntity<?> login(@RequestBody LoginDTO request){
+		return null;	
+	}
+	
+	
+	
+
+}

@@ -1,0 +1,5 @@
+package com.reparacar.dto;
+
+public class LoginDTO {
+
+}

@@ -1,0 +1,22 @@
+package com.reparacar.service;
+
+import com.reparacar.dto.ClienteDTO;
+
+import java.util.List;
+
+public interface ClienteService {
+    
+    ClienteDTO crearCliente(ClienteDTO clienteDTO);
+    
+    ClienteDTO obtenerClientePorId(Long id);
+    
+    ClienteDTO obtenerClientePorEmail(String email);
+    
+    List<ClienteDTO> listarTodosLosClientes();
+    
+    ClienteDTO actualizarCliente(Long id, ClienteDTO clienteDTO);
+    
+    void eliminarCliente(Long id);
+    
+    boolean existeClienteConEmail(String email);
+}

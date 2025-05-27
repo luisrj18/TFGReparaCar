@@ -1,0 +1,26 @@
+package com.reparacar.dto;
+
+import java.io.Serializable;
+import java.util.List;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class TallerDTO implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    private Long id;
+    private String nombre;
+    private String direccion;
+    private String telefono;
+    private String email;
+    private String descripcion;
+    private List<String> servicios;
+    private String horario;
+    private Double puntuacionPromedio;
+}

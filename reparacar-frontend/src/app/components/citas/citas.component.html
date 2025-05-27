@@ -1,0 +1,211 @@
+
+<div class="citas-container">
+  <div class="citas-card">
+    <div class="citas-header">
+      <h1>{{ editMode ? 'Editar Cita' : 'Programar Nueva Cita' }}</h1>
+      <p>{{ editMode ? 'Modifica los datos de tu cita actual' : 'Agenda tu cita para el servicio de tu vehículo' }}</p>
+    </div>
+    
+    <div class="citas-form">
+      <form [formGroup]="appointmentForm" (ngSubmit)="submitAppointment()">
+        <div class="form-group">
+          <label for="nombre">Nombre del Cliente</label>
+          <input 
+            type="text" 
+            id="nombre" 
+            formControlName="nombre" 
+            placeholder="Ingrese su nombre completo"
+            [ngClass]="{'is-invalid': appointmentForm.get('nombre')?.invalid && appointmentForm.get('nombre')?.touched}">
+          <div class="error-message" *ngIf="appointmentForm.get('nombre')?.invalid && appointmentForm.get('nombre')?.touched">
+            El nombre es obligatorio y debe tener al menos 3 caracteres.
+          </div>
+        </div>
+        
+        <div class="form-group-row">
+          <div class="form-group">
+            <label for="modeloVehiculo">Modelo del Vehículo</label>
+            <input 
+              type="text" 
+              id="modeloVehiculo" 
+              formControlName="modeloVehiculo" 
+              placeholder="Marca y modelo (ej. Toyota Corolla)"
+              [ngClass]="{'is-invalid': appointmentForm.get('modeloVehiculo')?.invalid && appointmentForm.get('modeloVehiculo')?.touched}">
+            <div class="error-message" *ngIf="appointmentForm.get('modeloVehiculo')?.invalid && appointmentForm.get('modeloVehiculo')?.touched">
+              El modelo del vehículo es obligatorio.
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="matricula">Matrícula</label>
+            <input 
+              type="text" 
+              id="matricula" 
+              formControlName="matricula" 
+              placeholder="Ej. 1234ABC"
+              [ngClass]="{'is-invalid': appointmentForm.get('matricula')?.invalid && appointmentForm.get('matricula')?.touched}">
+            <div class="error-message" *ngIf="appointmentForm.get('matricula')?.invalid && appointmentForm.get('matricula')?.touched">
+              La matrícula es obligatoria y debe tener un formato válido.
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group-row">
+          <div class="form-group">
+            <label for="fecha">Fecha de la Cita</label>
+            <input 
+              type="date" 
+              id="fecha" 
+              formControlName="fecha"
+              [ngClass]="{'is-invalid': appointmentForm.get('fecha')?.invalid && appointmentForm.get('fecha')?.touched}">
+            <div class="error-message" *ngIf="appointmentForm.get('fecha')?.invalid && appointmentForm.get('fecha')?.touched">
+              La fecha es obligatoria.
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="hora">Hora de la Cita</label>
+            <input 
+              type="time" 
+              id="hora" 
+              formControlName="hora"
+              [ngClass]="{'is-invalid': appointmentForm.get('hora')?.invalid && appointmentForm.get('hora')?.touched}">
+            <div class="error-message" *ngIf="appointmentForm.get('hora')?.invalid && appointmentForm.get('hora')?.touched">
+              La hora es obligatoria.
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="servicio">Tipo de Servicio</label>
+          <select 
+            id="servicio" 
+            formControlName="servicio"
+            [ngClass]="{'is-invalid': appointmentForm.get('servicio')?.invalid && appointmentForm.get('servicio')?.touched}">
+            <option value="">Seleccione un servicio</option>
+            <option *ngFor="let service of serviceOptions" [value]="service">{{ service }}</option>
+          </select>
+          <div class="error-message" *ngIf="appointmentForm.get('servicio')?.invalid && appointmentForm.get('servicio')?.touched">
+            Debe seleccionar un tipo de servicio.
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="descripcion">Descripción del problema</label>
+          <textarea 
+            id="descripcion" 
+            formControlName="descripcion" 
+            rows="4" 
+            placeholder="Describa el problema de su vehículo o el servicio que necesita"></textarea>
+        </div>
+        
+        <div class="form-group" *ngIf="editMode">
+          <label for="estado">Estado de la Cita</label>
+          <select id="estado" formControlName="estado">
+            <option value="pending">Pendiente</option>
+            <option value="confirmed">Confirmada</option>
+            <option value="cancelled">Cancelada</option>
+            <option value="completed">Completada</option>
+          </select>
+        </div>
+        
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" (click)="resetForm()">
+            Cancelar
+          </button>
+          <button type="submit" class="btn-primary" [disabled]="appointmentForm.invalid || this.cliente.id">
+            {{ editMode ? 'Actualizar Cita' : 'Programar Cita' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <div class="citas-list-card">
+    <div class="citas-list-header">
+      <h2>Mis Citas</h2>
+      <div class="filter-controls">
+        <div class="filter-group">
+          <label for="filterStatus">Filtrar por:</label>
+          <select id="filterStatus" [(ngModel)]="filterStatus">
+            <option value="all">Todas</option>
+            <option value="pending">Pendientes</option>
+            <option value="confirmed">Confirmadas</option>
+            <option value="cancelled">Canceladas</option>
+            <option value="completed">Completadas</option>
+          </select>
+        </div>
+        <button class="btn-sort" (click)="sortAppointmentsByDate()">
+          Ordenar por fecha
+        </button>
+      </div>
+    </div>
+    
+    <div class="citas-list-body">
+      <div class="citas-empty" *ngIf="getFilteredAppointments().length === 0">
+        No hay citas disponibles con el filtro seleccionado.
+      </div>
+      
+      <div *ngFor="let appointment of getFilteredAppointments()" 
+           class="citas-item citas-item-{{ appointment.estado }}">
+        <div class="citas-item-header">
+          <div class="citas-detail-label">Cliente:</div>
+          <h3 class="citas-item-title">{{ appointment.nombre }}</h3>
+          <span class="status-badge status-badge-{{ appointment.estado }}">
+            {{ getStatusLabel(appointment.estado) }}
+          </span>
+        </div>
+        
+        <div class="citas-item-body">
+          <div class="citas-detail">
+            <div class="citas-detail-label">Vehículo:</div>
+            <div class="citas-detail-value">{{ appointment.modeloVehiculo }}</div>
+          </div>
+          <div class="citas-detail">
+            <div class="citas-detail-label">Matrícula:</div>
+            <div class="citas-detail-value">{{ appointment.matricula }}</div>
+          </div>
+          <div class="citas-detail">
+            <div class="citas-detail-label">Fecha y hora:</div>
+            <div class="citas-detail-value">{{ appointment.fecha | date:'dd/MM/yyyy' }} a las {{ appointment.hora }}</div>
+          </div>
+          <div class="citas-detail">
+            <div class="citas-detail-label">Servicio:</div>
+            <div class="citas-detail-value">{{ appointment.servicio }}</div>
+          </div>
+          <div class="citas-detail" *ngIf="appointment.descripcion">
+            <div class="citas-detail-label">Descripción:</div>
+            <div class="citas-detail-value">{{ appointment.descripcion }}</div>
+          </div>
+        </div>
+        
+        <div class="citas-item-actions">
+          <div class="action-btns">
+            <button class="btn-sm btn-edit" (click)="editAppointment(appointment)">
+              Editar
+            </button>
+            <button class="btn-sm btn-delete" (click)="deleteAppointment(appointment.id)">
+              Eliminar
+            </button>
+          </div>
+          
+          <div class="status-btns">
+            <button class="btn-sm btn-confirm" *ngIf="appointment.estado !== 'confirmed'" 
+                    (click)="changeAppointmentStatus(appointment.id, 'confirmed')">
+              Confirmar
+            </button>
+            <button class="btn-sm btn-cancel" *ngIf="appointment.estado !== 'cancelled'" 
+                    (click)="changeAppointmentStatus(appointment.id, 'cancelled')">
+              Cancelar
+            </button>
+            <button class="btn-sm btn-complete" *ngIf="appointment.estado !== 'completed'" 
+                    (click)="changeAppointmentStatus(appointment.id, 'completed')">
+              Completar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <a class="btn" routerLink="/home">Volver</a>
+</div>

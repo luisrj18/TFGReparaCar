@@ -1,0 +1,54 @@
+package com.reparacar.entity;
+
+import java.io.Serializable;
+import java.util.List;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "talleres")
+public class Taller implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private String nombre;
+
+    @Column(nullable = false)
+    private String direccion;
+
+    @Column
+    private String telefono;
+
+    @Column
+    private String email;
+
+    @Column(length = 1000)
+    private String descripcion;
+
+    @ElementCollection
+    @CollectionTable(name = "taller_servicios", joinColumns = @JoinColumn(name = "taller_id"))
+    @Column(name = "servicio")
+    private List<String> servicios;
+
+    @Column
+    private String horario;
+
+    @Column(name = "puntuacion_promedio")
+    private Double puntuacionPromedio;
+    
+    @OneToMany(mappedBy = "taller", cascade = CascadeType.ALL)
+    private List<Citas> citas;
+
+}
+

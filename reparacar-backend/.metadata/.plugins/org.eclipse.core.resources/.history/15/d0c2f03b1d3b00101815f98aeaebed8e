@@ -1,0 +1,22 @@
+package com.reparacar.repository;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.reparacar.entity.Taller;
+
+@Repository
+public interface TallerRepository extends JpaRepository<Taller, Long> {
+    
+    List<Taller> findByNombreContainingIgnoreCase(String nombre);
+
+    List<Taller> findByDireccionContainingIgnoreCase(String direccion);
+
+    List<Taller> findByServiciosContainingIgnoreCase(String servicio);
+    
+    Optional<Taller> findByEmailAndPassword(String email, String password);
+}
+

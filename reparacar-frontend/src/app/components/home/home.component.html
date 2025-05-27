@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">   
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav class="navbar" >
+                <div class="branding">
+                <img src="/logo-reparacar2.png" alt="ReparaCar Logo" class="login-logo" />
+                <div class="logo">ReparaCar<span>&nbsp; Tu taller de confianza</span></div>
+                </div>
+                <ul class="menu">
+                    <li><a href="#features">Funcionalidades</a></li>
+                    <li><a routerLink="/appointment" > Citas </a></li>
+                    <li ><a routerLink="/register" *ngIf="cliente?.id!=null" class="btn">Mis Datos</a></li>
+                    <li ><a class="btn" *ngIf="cliente?.id!=null" class="btn" (click)="logout()">Cerrar Sesión</a></li>
+                    <li ><a class="btn" routerLink="/login" *ngIf="!cliente?.id">Iniciar Sesión</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Bienvenido {{cliente.nombre}}</h1>
+                <h1>Tu taller de confianza ahora en línea</h1>
+                <p>Programa citas, recibe actualizaciones en tiempo real y lleva un historial completo de tu vehículo en un solo lugar.</p>
+                <a routerLink="/register" class="btn">Registrarse ahora</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Nuestras Funcionalidades</h2>
+            </div>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">👤</div>
+                    <h3>Registro de Usuarios</h3>
+                    <p>Crea tu perfil personal para acceder a todos nuestros servicios de manera rápida y segura.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📅</div>
+                    <h3>Citas Programadas</h3>
+                    <p>Reserva tu cita según disponibilidad en tiempo real y recibe recordatorios automáticos.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📊</div>
+                    <h3>Historial de Servicios</h3>
+                    <p>Consulta todo el historial de reparaciones y mantenimientos de tus vehículos.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="how-it-works" id="how">
+        <div class="container">
+            <div class="section-title">
+                <h2>Cómo Funciona</h2>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Regístrate</h3>
+                    <p>Crea tu cuenta en nuestra plataforma con tus datos personales y añade la información de tu vehículo.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Agenda una Cita</h3>
+                    <p>Selecciona el servicio que necesitas, la fecha y hora disponible que mejor te convenga.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Servicio</h3>
+                    <p>Lleva tu vehículo en la fecha programada y recibe actualizaciones en tiempo real.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Seguimiento</h3>
+                    <p>Consulta el historial completo de servicios y programa mantenimientos futuros.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <div class="footer-logo">ReparaCar</div>
+                    <p>Tu solución completa para el mantenimiento y reparación de tu vehículo.</p>
+                </div>
+                <div class="footer-links">
+                    <h3>Navegación</h3>
+                    <ul>
+                        <li><a href="#features">Funcionalidades</a></li>
+                        <li><a href="#how">Cómo Funciona</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Servicios</h3>
+                    <ul>
+                        <li><a >Mantenimiento</a></li>
+                        <li><a >Reparaciones</a></li>
+                        <li><a >Diagnóstico</a></li>
+                        <li><a >Emergencias</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Contacto</h3>
+                    <ul>
+                        <li>📍 Av. Principal 123</li>
+                        <li>📞 +34 954 860 135</li>
+                        <li>✉️ {{ 'info@reparacar.com' }}</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 ReparaCar. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

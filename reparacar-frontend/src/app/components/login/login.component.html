@@ -1,0 +1,33 @@
+<div class="login-background">
+  <div class="login-wrapper">
+  <img src="/logo-reparacar.png" alt="ReparaCar Logo" class="login-logo" />
+    
+  <div class="login-container">
+      <h2>Iniciar Sesión</h2>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div>
+          <label>Email:</label>
+          <input formControlName="email" type="email" />
+          <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
+            <small *ngIf="loginForm.get('email')?.errors?.['required']">Email requerido.</small>
+            <small *ngIf="loginForm.get('email')?.errors?.['email']">Formato inválido.</small>
+          </div>
+        </div>
+    
+        <div>
+          <label>Contraseña:</label>
+          <input formControlName="password" type="password" />
+          <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
+            <small>Contraseña requerida.</small>
+          </div>
+        </div>
+        <div class="login-link">
+        ¿Aún no tienes cuenta? <a routerLink="/register">Registrate</a><a routerLink="/home"> ó volver</a>
+        </div>
+        <button type="submit" [disabled]="isSubmitting">Entrar</button>
+        <div *ngIf="loginError" class="error-message">{{ loginError }}</div>
+      </form>
+    </div>
+    
+  </div>
+</div>
