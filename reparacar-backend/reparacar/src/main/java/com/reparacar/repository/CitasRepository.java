@@ -12,12 +12,12 @@ public interface CitasRepository extends JpaRepository<Citas, Long> {
     
     List<Citas> findByNombreContainingIgnoreCase(String nombre);
 
-    List<Citas> findByEstadoIgnoreCase(String estado);
+    List<Citas> findByEstadoContainingIgnoreCase(String estado);
 
     List<Citas> findByFecha(LocalDate fecha);
 
     List<Citas> findByMatriculaContainingIgnoreCase(String matricula);
 
-    List<Citas> findByNombreContainingIgnoreCaseAndEstado(String nombre, String estado);
+	List<Citas> findByTallerId(Long tallerId);
 }
 

@@ -15,7 +15,6 @@ export class HomeComponent implements OnInit {
   ) {}
 
  
-
   ngOnInit(): void {
     let cliente = JSON.parse(localStorage.getItem('cliente')!);
     console.log(cliente)

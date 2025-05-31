@@ -15,7 +15,8 @@
                 <ul class="menu">
                     <li><a href="#features">Funcionalidades</a></li>
                     <li><a routerLink="/appointment" > Citas </a></li>
-                    <li ><a routerLink="/register" *ngIf="cliente?.id!=null" class="btn">Mis Datos</a></li>
+                    <li ><a routerLink="/register" *ngIf="cliente?.cif==null" class="btn">Mis Datos</a></li>
+                    <li ><a routerLink="/workshop" *ngIf="cliente?.cif!=null" class="btn">Mis Datos</a></li>
                     <li ><a class="btn" *ngIf="cliente?.id!=null" class="btn" (click)="logout()">Cerrar Sesión</a></li>
                     <li ><a class="btn" routerLink="/login" *ngIf="!cliente?.id">Iniciar Sesión</a></li>
                 </ul>

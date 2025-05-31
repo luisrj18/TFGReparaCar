@@ -1,5 +1,11 @@
 package com.reparacar.serviceImpl;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
 import com.reparacar.ResourceNotFoundException;
 import com.reparacar.dto.CitasDTO;
 import com.reparacar.entity.Citas;
@@ -10,13 +16,6 @@ import com.reparacar.repository.ClienteRepository;
 import com.reparacar.repository.TallerRepository;
 import com.reparacar.service.CitasService;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 public class CitasServiceImpl implements CitasService {
 
@@ -24,7 +23,6 @@ public class CitasServiceImpl implements CitasService {
     private final ClienteRepository clienteRepository;
     private final TallerRepository tallerRepository;
 
-    @Autowired
     public CitasServiceImpl(CitasRepository citasRepository, ClienteRepository clienteRepository,TallerRepository tallerRepository) {
     	this.citasRepository = citasRepository;
     	this.clienteRepository = clienteRepository;
@@ -67,15 +65,15 @@ public class CitasServiceImpl implements CitasService {
         cita.setDescripcion(citaDTO.getDescripcion());
         cita.setEstado(citaDTO.getEstado());
         
-        if (citaDTO.getClienteId() != null) {
-            Cliente cliente = clienteRepository.findById(citaDTO.getClienteId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con ID: " + citaDTO.getClienteId()));
+        if (citaDTO.getCliente_id() != null) {
+            Cliente cliente = clienteRepository.findById(citaDTO.getCliente_id())
+                    .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con ID: " + citaDTO.getCliente_id()));
             cita.setCliente(cliente);
         }
 
-        if (citaDTO.getTallerId() != null) {
-            Taller taller = tallerRepository.findById(citaDTO.getTallerId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Taller no encontrado con ID: " + citaDTO.getTallerId()));
+        if (citaDTO.getTaller_id() != null) {
+            Taller taller = tallerRepository.findById(citaDTO.getTaller_id())
+                    .orElseThrow(() -> new ResourceNotFoundException("Taller no encontrado con ID: " + citaDTO.getTaller_id()));
             cita.setTaller(taller);
         }
 
@@ -100,7 +98,7 @@ public class CitasServiceImpl implements CitasService {
 
     @Override
     public List<CitasDTO> buscarCitasPorEstado(String estado) {
-        return citasRepository.findByNombreContainingIgnoreCase(estado)
+        return citasRepository.findByEstadoContainingIgnoreCase(estado)
                 .stream()
                 .map(this::mapearADTO)
                 .collect(Collectors.toList());
@@ -121,11 +119,17 @@ public class CitasServiceImpl implements CitasService {
                 .map(this::mapearADTO)
                 .collect(Collectors.toList());
     }
+    
+    @Override
+    public List<CitasDTO> buscarCitasPorTallerId(Long tallerId) {
+        List<Citas> citas = citasRepository.findByTallerId(tallerId);
+        return citas.stream().map(this::mapearADTO).toList();
+    }
+
 
     // Métodos auxiliares de mapeo
     private CitasDTO mapearADTO(Citas cita) {
         CitasDTO dto = new CitasDTO();
-        dto.setId(cita.getId());
         dto.setNombre(cita.getNombre());
         dto.setModeloVehiculo(cita.getModeloVehiculo());
         dto.setMatricula(cita.getMatricula());
@@ -136,10 +140,10 @@ public class CitasServiceImpl implements CitasService {
         dto.setEstado(cita.getEstado());
         
         if (cita.getCliente() != null) {
-            dto.setClienteId(cita.getCliente().getId());
+            dto.setCliente_id(cita.getCliente().getId());
         }
         if (cita.getTaller() != null) {
-            dto.setTallerId(cita.getTaller().getId());
+            dto.setTaller_id(cita.getTaller().getId());
         }
         
         return dto;
@@ -147,7 +151,7 @@ public class CitasServiceImpl implements CitasService {
 
     private Citas mapearAEntidad(CitasDTO dto) {
         Citas cita = new Citas();
-        cita.setId(dto.getId());
+        
         cita.setNombre(dto.getNombre());
         cita.setModeloVehiculo(dto.getModeloVehiculo());
         cita.setMatricula(dto.getMatricula());
@@ -157,12 +161,12 @@ public class CitasServiceImpl implements CitasService {
         cita.setDescripcion(dto.getDescripcion());
         cita.setEstado(dto.getEstado());
         
-        Cliente cliente = clienteRepository.findById(dto.getClienteId())
-                .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con ID: " + dto.getClienteId()));
+        Cliente cliente = clienteRepository.findById(dto.getCliente_id())
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con ID: " + dto.getCliente_id()));
         cita.setCliente(cliente);
 
-        Taller taller = tallerRepository.findById(dto.getTallerId())
-                .orElseThrow(() -> new ResourceNotFoundException("Taller no encontrado con ID: " + dto.getTallerId()));
+        Taller taller = tallerRepository.findById(dto.getTaller_id())
+                .orElseThrow(() -> new ResourceNotFoundException("Taller no encontrado con ID: " + dto.getTaller_id()));
         cita.setTaller(taller);
         
         return cita;

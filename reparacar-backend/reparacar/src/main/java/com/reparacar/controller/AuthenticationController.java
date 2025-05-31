@@ -19,14 +19,10 @@ public class AuthenticationController {
 	public AuthenticationController(ClienteService clienteService) {
 		this.clienteService = clienteService;
 	}
-	
-	
+		
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody LoginDTO request){
 		return ResponseEntity.ok((clienteService.login(request)));	
 	}
 	
-
-	
-
 }

@@ -1,7 +1,6 @@
 package com.reparacar.dto;
 
 import java.io.Serializable;
-import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,6 +23,5 @@ public class TallerDTO implements Serializable {
     private String ciudad;
     private String provincia;
     private String password;
-    private List<String> servicios;
    
 }

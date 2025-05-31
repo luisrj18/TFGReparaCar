@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.reparacar.ResourceNotFoundException;
@@ -23,7 +22,7 @@ public class ClienteServiceImpl implements ClienteService {
     private final ClienteRepository clienteRepository;
     private final TallerRepository tallerRepository;
 
-    @Autowired
+
     public ClienteServiceImpl(ClienteRepository clienteRepository,TallerRepository tallerRepository) {
         this.clienteRepository = clienteRepository;
 		this.tallerRepository = tallerRepository;

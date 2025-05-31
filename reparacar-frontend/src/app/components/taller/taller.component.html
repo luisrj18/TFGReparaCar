@@ -1,8 +1,10 @@
 <div class="workshop-container">
   <div class="workshop-card">
     <div class="workshop-header">
-      <h1>Registra tu Taller</h1>
-      <p>Complete el formulario para registrar su taller en ReparaCar</p>
+      <h1 *ngIf="cliente.cif==null">Registra tu Taller</h1>
+      <p *ngIf="cliente.cif==null">Complete el formulario para registrar su taller en ReparaCar</p>
+       <h1 *ngIf="cliente.cif!=null">Datos de tu Taller</h1>
+      <p *ngIf="cliente.cif!=null">Datos registrados de su taller en ReparaCar</p>
     </div>
 
     <form [formGroup]="tallerForm" (ngSubmit)="onSubmit()" class="workshop-form">
@@ -146,14 +148,20 @@
         </div>
       </div>
 
-      <div class="form-actions">
+      <div class="form-actions" *ngIf="cliente.cif==null">
         <button type="button" class="btn-secondary" routerLink="/">Cancelar</button>
         <button type="submit" class="btn-primary" [disabled]="isSubmitting">
           {{ isSubmitting ? 'Registrando...' : 'Registrarse' }}
         </button>
       </div>
+      <div class="form-actions" *ngIf="cliente.cif!=null">
+        <button type="button" class="btn-secondary" routerLink="/">Cancelar</button>
+        <button type="submit" class="btn-primary" [disabled]="isSubmitting">
+          {{ isSubmitting ? 'Actualizando...' : 'Actualizar' }}
+        </button>
+      </div>
 
-      <div class="login-link">
+      <div class="login-link" *ngIf="cliente.cif==null">
         ¿Ya tienes una cuenta? <a routerLink="/login">Inicia sesión</a>
       </div>
     </form>

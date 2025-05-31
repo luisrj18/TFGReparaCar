@@ -1,12 +1,12 @@
 <!-- Modal de selección de tipo de usuario -->
-<div class="modal-overlay" *ngIf="showUserTypeModal">
+<div class="modal-overlay" *ngIf="showUserTypeModal" >
   <div class="user-type-modal">
     <div class="modal-header">
       <h2>¿Cómo deseas registrarte?</h2>
       <p>Selecciona el tipo de registro que corresponde a tu perfil</p>
     </div>
     
-    <div class="user-type-options">
+    <div class="user-type-options" >
       <div class="user-type-card" (click)="selectUserType('particular')">
         <div class="user-type-icon">
           <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -42,8 +42,10 @@
 <div class="register-container" *ngIf="!showUserTypeModal">
   <div class="register-card">
     <div class="register-header">
-      <h1>Crear una cuenta</h1>
-      <p>Complete el formulario para registrarse en ReparaCar</p>
+      <h1 *ngIf="cliente==null">Crear una cuenta</h1>
+      <p *ngIf="cliente==null">Complete el formulario para registrarse en ReparaCar</p>
+      <h1 *ngIf="cliente!=null">Mis Datos</h1>
+      <p *ngIf="cliente!=null">Aquí podrás ver información acerca de tu perfil</p>
     </div>
     
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
@@ -262,7 +264,7 @@
         }
       </div>
 
-      <div class="form-actions">
+      <div class="form-actions" *ngIf="this.cliente?.id==null">
         <button type="button" class="btn-secondary" routerLink="/home">Cancelar</button>
         <button 
           type="submit" 
@@ -272,8 +274,18 @@
           {{ isSubmitting ? 'Registrando...' : 'Registrarse' }}
         </button>
       </div>
+            <div class="form-actions" *ngIf="this.cliente?.id!=null">
+        <button type="button" class="btn-secondary" routerLink="/home">Cancelar</button>
+        <button 
+          type="submit" 
+          class="btn-primary" 
+          [disabled]="isSubmitting"
+        >
+          {{ isSubmitting ? 'Actualizando...' : 'Actualizar' }}
+        </button>
+      </div>
       
-      <div class="login-link">
+      <div class="login-link" *ngIf="this.cliente?.id==null">
         ¿Ya tienes una cuenta? <a routerLink="/login">Inicia sesión</a>
       </div>
     </form>

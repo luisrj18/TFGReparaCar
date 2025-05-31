@@ -1,23 +1,22 @@
 package com.reparacar.serviceImpl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
 import com.reparacar.ResourceNotFoundException;
 import com.reparacar.dto.TallerDTO;
 import com.reparacar.entity.Taller;
 import com.reparacar.repository.TallerRepository;
 import com.reparacar.service.TallerService;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 public class TallerServiceImpl implements TallerService {
 
     private final TallerRepository tallerRepository;
 
-    @Autowired
+
     public TallerServiceImpl(TallerRepository tallerRepository) {
         this.tallerRepository = tallerRepository;
     }
@@ -90,24 +89,32 @@ public class TallerServiceImpl implements TallerService {
         TallerDTO dto = new TallerDTO();
         dto.setId(taller.getId());
         dto.setNombre(taller.getNombre());
-        dto.setDireccion(taller.getDireccion());
-        dto.setTelefono(taller.getTelefono());
+        dto.setCif(taller.getCif());
         dto.setEmail(taller.getEmail());
+        dto.setTelefono(taller.getTelefono());
+        dto.setDireccion(taller.getDireccion());
+        dto.setCodigoPostal(taller.getCodigoPostal());
+        dto.setCiudad(taller.getCiudad());
+        dto.setProvincia(taller.getProvincia());
+        dto.setPassword(taller.getPassword());             
+        
         return dto;
     }
 
     private Taller mapearAEntidad(TallerDTO dto) {
         Taller taller = new Taller();
         taller.setId(dto.getId());
-        taller.setCif(dto.getCif());
-        taller.setCitas(null);
-        taller.setCiudad(dto.getCiudad());
-        taller.setPassword(dto.getPassword());
-        taller.setProvincia(dto.getProvincia());
         taller.setNombre(dto.getNombre());
-        taller.setDireccion(dto.getDireccion());
-        taller.setTelefono(dto.getTelefono());
+        taller.setCif(dto.getCif());
         taller.setEmail(dto.getEmail());
+        taller.setTelefono(dto.getTelefono());
+        taller.setDireccion(dto.getDireccion());
+        taller.setCodigoPostal(dto.getCodigoPostal());
+        taller.setCiudad(dto.getCiudad());
+        taller.setProvincia(dto.getProvincia());
+        taller.setPassword(dto.getPassword());        
+        taller.setCitas(null);              
+      
         return taller;
     }
 }

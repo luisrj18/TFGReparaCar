@@ -18,6 +18,7 @@ export class RegisterComponent implements OnInit {
   registerError = '';
   showUserTypeModal = true; // Controla la visibilidad del modal
   private baseUrl = 'http://localhost:8080/api/clientes';
+  cliente: any;
 
   constructor(
     private fb: FormBuilder,
@@ -30,7 +31,9 @@ export class RegisterComponent implements OnInit {
     this.initForm();
     let cliente = JSON.parse(localStorage.getItem('cliente')!);
     if(cliente){
+      this.cliente= cliente;
       this.registerForm.patchValue(cliente)
+      this.showUserTypeModal=false;
     }
   }
 
@@ -104,7 +107,36 @@ export class RegisterComponent implements OnInit {
     
     this.isSubmitting = true;
     this.registerError = '';
+    if(this.cliente){
+      this.http.put<any>(this.baseUrl+"/"+`${this.cliente.id}`, userData).subscribe({
+      next: (response) => {
+        console.log('Registro exitoso', response);
+        localStorage.setItem('cliente', JSON.stringify(response));
+        const token = response?.token;
+        if (token) {
+          localStorage.setItem('auth_token', token);
+        }
 
+        this.registerForm.reset();
+        //localStorage.removeItem('cliente');
+        this.router.navigate(['/appointment']);
+      },
+      error: (error) => {
+        console.error('Error en el registro', error);
+
+        if (error.status === 409) {
+          this.registerError = 'El correo electrónico ya está registrado.';
+        } else if (error.error?.message) {
+          this.registerError = error.error.message;
+        } else {
+          this.registerError = 'Ha ocurrido un error durante el registro. Inténtelo nuevamente más tarde.';
+        }
+      },
+      complete: () => {
+        this.isSubmitting = false;
+      }
+    });
+    }else{
     this.http.post<any>(this.baseUrl, userData).subscribe({
       next: (response) => {
         console.log('Registro exitoso', response);
@@ -133,6 +165,7 @@ export class RegisterComponent implements OnInit {
         this.isSubmitting = false;
       }
     });
+  }  
   }
 
   markFormGroupTouched(formGroup: FormGroup): void {

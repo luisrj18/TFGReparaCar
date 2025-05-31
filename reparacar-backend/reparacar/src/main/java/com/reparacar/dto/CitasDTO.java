@@ -14,7 +14,6 @@ public class CitasDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Long id;
     private String nombre;
     private String modeloVehiculo;
     private String matricula;
@@ -24,6 +23,6 @@ public class CitasDTO implements Serializable {
     private String descripcion;
     private String estado; // "pending", "confirmed", "cancelled", "completed"
     
-    private Long clienteId;
-    private Long tallerId;
+    private Long cliente_id;
+    private Long taller_id;
 }

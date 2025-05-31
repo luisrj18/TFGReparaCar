@@ -1,14 +1,23 @@
 package com.reparacar.controller;
 
-import com.reparacar.dto.CitasDTO;
-import com.reparacar.service.CitasService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.reparacar.dto.CitasDTO;
+import com.reparacar.service.CitasService;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -17,7 +26,7 @@ public class CitasController {
 
     private final CitasService citasService;
 
-    @Autowired
+
     public CitasController(CitasService citasService) {
         this.citasService = citasService;
     }
@@ -77,12 +86,12 @@ public class CitasController {
         List<CitasDTO> citas = citasService.buscarCitasPorMatricula(matricula);
         return new ResponseEntity<>(citas, HttpStatus.OK);
     }
-
-    // Buscar citas por fecha (YYYY-MM-DD)
-    @GetMapping("/buscar/fecha")
-    public ResponseEntity<List<CitasDTO>> buscarPorFecha(@RequestParam String fecha) {
-        LocalDate fechaParsed = LocalDate.parse(fecha);
-        List<CitasDTO> citas = citasService.buscarCitasPorFecha(fechaParsed);
+    
+    //Buscar Citas por taller_id
+    @GetMapping("/buscar/taller")
+    public ResponseEntity<List<CitasDTO>> buscarPorTallerId(@RequestParam Long tallerId) {
+        List<CitasDTO> citas = citasService.buscarCitasPorTallerId(tallerId);
         return new ResponseEntity<>(citas, HttpStatus.OK);
     }
+
 }

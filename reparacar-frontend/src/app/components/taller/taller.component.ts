@@ -16,6 +16,7 @@ export class WorkshopComponent implements OnInit {
   isSubmitting = false;
   errorMsg = '';
   private baseUrl = 'http://localhost:8080/api/talleres';
+  cliente:any
 
   constructor(
     private fb: FormBuilder,
@@ -37,6 +38,11 @@ export class WorkshopComponent implements OnInit {
       confirmPassword: ['', Validators.required],
       acceptTerms: [false, Validators.requiredTrue]
     }, { validators: this.passwordMatchValidator });
+    let cliente = JSON.parse(localStorage.getItem('cliente')!);
+    if(cliente){
+      this.cliente= cliente;
+      this.tallerForm.patchValue(cliente)
+    }
   }
 
   passwordMatchValidator(form: FormGroup) {

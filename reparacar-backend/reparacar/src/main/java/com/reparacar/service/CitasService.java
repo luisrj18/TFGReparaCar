@@ -33,4 +33,8 @@ public interface CitasService {
 
     // Buscar citas por matrícula
     List<CitasDTO> buscarCitasPorMatricula(String matricula);
+    
+    // Buscar citas por talle_id
+    List<CitasDTO> buscarCitasPorTallerId(Long tallerId);
+
 }

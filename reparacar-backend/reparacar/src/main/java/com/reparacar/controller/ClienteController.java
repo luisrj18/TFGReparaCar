@@ -54,11 +54,4 @@ public class ClienteController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     
-    // Buscar clientes por nombre o apellidos (búsqueda parcial)
-    @GetMapping("/buscar")
-    public ResponseEntity<List<ClienteDTO>> buscarClientes(@RequestParam(required = false) String nombre, 
-                                                          @RequestParam(required = false) String apellidos) {
-        List<ClienteDTO> clientes = clienteService.buscarClientes(nombre, apellidos);
-        return new ResponseEntity<>(clientes, HttpStatus.OK);
-    }
 }
