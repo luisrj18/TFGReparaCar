@@ -5,6 +5,7 @@ import { RouterLink, RouterModule } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 
+// Interfaz que define la estructura de una cita
 interface Appointment {
   nombre: any;
   id: number;
@@ -29,14 +30,14 @@ interface Appointment {
   styleUrl: './citas.component.css'
 })
 export class AppointmentComponent implements OnInit {
-  private http = inject(HttpClient);
+  private http = inject(HttpClient);  // Inyección del servicio HttpClient
   appointments: Appointment[] = [];
   appointmentForm!: FormGroup;
   editMode = false;
   currentAppointmentId: number | null = null;
   filterStatus: string = 'all';
-  private baseUrl = 'http://localhost:8080/api/citas';
-  private baseUrlTaller = 'http://localhost:8080/api/talleres';
+  private baseUrl = 'http://localhost:8080/api/citas';  // URL base para API de citas
+  private baseUrlTaller = 'http://localhost:8080/api/talleres';  // URL base para talleres
   clienteId: number | null = null;
   cliente: any
   taller:any;
@@ -100,20 +101,23 @@ export class AppointmentComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
-    this.loadAppointments();
+    this.loadAppointments();  // Cargar citas desde localStorage
     this.generarHorasDisponibles();
     this.loadTaller();
     this.loadCitasDelTaller();
+
+    // Cargar cliente o taller desde localStorage
     this.cliente = JSON.parse(localStorage.getItem('cliente')!);
     this.taller = JSON.parse(localStorage.getItem('taller')!);
     if (this.cliente) {
       this.clienteId = this.cliente.id;
-      this.loadCitasDelCliente(); // carga local para clientes
+      this.loadCitasDelCliente(); // Si es cliente
     } else if (this.taller) {
-      this.loadCitasDelTaller(); // carga desde backend para talleres
+      this.loadCitasDelTaller(); // Si es taller
     }
   }
 
+  // Carga lista de talleres desde el backend
   loadTaller() {
     this.http.get<any>(this.baseUrlTaller).subscribe({
       next: (response) => {
@@ -126,6 +130,7 @@ export class AppointmentComponent implements OnInit {
     });
   }
 
+  // Inicializa el formulario con validadores
   initForm(): void {
     this.appointmentForm = this.fb.group({
       taller_id: [null, Validators.required],
@@ -138,13 +143,13 @@ export class AppointmentComponent implements OnInit {
       estado: ['pending', Validators.required]
     });
   }
-
+  // Guarda citas y talleres en localStorage
   saveAppointments(): void {
     localStorage.setItem('repara-car-appointments', JSON.stringify(this.appointments));
     localStorage.setItem('taller', JSON.stringify(this.talleres));
-    //llamar al backend guardar en base de datos
+  
   }
-
+  // Carga citas guardadas localmente
   loadAppointments(): void {
     const savedAppointments = localStorage.getItem('repara-car-appointments');
     if (savedAppointments) {
@@ -154,7 +159,7 @@ export class AppointmentComponent implements OnInit {
       }));
     }
   }
-
+  // Crea o actualiza una cita y la envía al backend
   submitAppointment(): void {
     if (this.appointmentForm.invalid) {
       this.markFormGroupTouched(this.appointmentForm);
@@ -173,6 +178,7 @@ export class AppointmentComponent implements OnInit {
       nombre: cliente ? cliente.nombre : 'No especificado'
     };
 
+    // Si se está editando una cita existente
     if (this.editMode && this.currentAppointmentId !== null) {
       const index = this.appointments.findIndex(a => a.id === this.currentAppointmentId);
       if (index !== -1) {
@@ -182,6 +188,7 @@ export class AppointmentComponent implements OnInit {
         };
       }
     } else {
+      // Nueva cita
       const newAppointment: Appointment = {
         id: Date.now(),
         ...citaData,
@@ -211,6 +218,7 @@ export class AppointmentComponent implements OnInit {
     });
   }
 
+  // Carga una cita en el formulario para su edición
   editAppointment(appointment: Appointment): void {
     this.editMode = true;
     this.currentAppointmentId = appointment.id;
@@ -231,6 +239,7 @@ export class AppointmentComponent implements OnInit {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  // Elimina una cita por ID
   deleteAppointment(id: number): void {
     if (confirm('¿Estás seguro de que quieres eliminar esta cita?')) {
       this.appointments = this.appointments.filter(appointment => appointment.id !== id);
@@ -238,6 +247,7 @@ export class AppointmentComponent implements OnInit {
     }
   }
 
+  // Limpia el formulario y reinicia modo edición
   resetForm(): void {
     this.appointmentForm.reset({
       estado: 'pending'
@@ -275,11 +285,13 @@ export class AppointmentComponent implements OnInit {
         return this.appointments.filter(appointment => appointment.estado === this.filterStatus);
       }
 
+      // Ordena las citas por fecha
   sortAppointmentsByDate(): void {
         this.appointments.sort((a, b) => a.fecha.getTime() - b.fecha.getTime());
         this.saveAppointments();
       }
 
+  // Carga las citas del taller desde el backend    
   loadCitasDelTaller(): void {
         const taller = JSON.parse(localStorage.getItem('cliente')!);
         if (!taller) return;
@@ -297,17 +309,18 @@ export class AppointmentComponent implements OnInit {
           }
         });
       }
+      
+  // Carga las citas del cliente desde el backend    
+  loadCitasDelCliente(): void {
+        const cliente = JSON.parse(localStorage.getItem('cliente')!);
+        if (!cliente) return;
 
-      loadCitasDelCliente(): void {
-  const cliente = JSON.parse(localStorage.getItem('cliente')!);
-  if (!cliente) return;
-
-  this.http.get<Appointment[]>(`${this.baseUrl}/buscar/cliente?clienteId=${cliente.id}`).subscribe({
-    next: (response) => {
-      this.appointments = response.map(cita => ({
-        ...cita,
-        fecha: new Date(cita.fecha)
-      }));
+       this.http.get<Appointment[]>(`${this.baseUrl}/buscar/cliente?clienteId=${cliente.id}`).subscribe({
+        next: (response) => {
+         this.appointments = response.map(cita => ({
+          ...cita,
+          fecha: new Date(cita.fecha)
+        }));
     },
     error: (error) => {
       console.error('Error al cargar citas del cliente:', error);

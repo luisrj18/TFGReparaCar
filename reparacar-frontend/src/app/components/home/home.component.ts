@@ -9,18 +9,19 @@ import { Router, RouterLink, RouterModule } from '@angular/router';
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit {
-  private router = inject(Router);
+  private router = inject(Router);  // Inyección del servicio de navegación
   cliente :any;
   Constructor(
   ) {}
 
- 
+ // Método que se ejecuta al inicializar el componente
   ngOnInit(): void {
     let cliente = JSON.parse(localStorage.getItem('cliente')!);
     console.log(cliente)
     if(cliente){this.cliente=cliente}
   }
 
+  // Método para cerrar sesión
   logout(){
     localStorage.clear()
     this.router.navigate(['/login']);

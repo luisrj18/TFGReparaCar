@@ -20,12 +20,13 @@ export class WorkshopComponent implements OnInit {
   esModoRegistro: boolean = true;
 
   constructor(
-    private fb: FormBuilder,
-    private http: HttpClient,
-    private router: Router
+    private fb: FormBuilder, // Constructor de formularios
+    private http: HttpClient, // Cliente HTTP
+    private router: Router // Router para navegación
   ) {}
 
   ngOnInit(): void {
+    // Inicializa el formulario con validaciones
     this.tallerForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(2)]],
       cif: ['', [Validators.required, Validators.pattern(/^[A-Z0-9]{9}$/)]],
@@ -40,6 +41,7 @@ export class WorkshopComponent implements OnInit {
       acceptTerms: [false, Validators.requiredTrue]
     }, { validators: this.passwordMatchValidator });
 
+    // Carga datos del taller si existen en localStorage
     const storedCliente = localStorage.getItem('cliente');
     if (storedCliente) {
       this.cliente = JSON.parse(storedCliente);
@@ -51,6 +53,7 @@ export class WorkshopComponent implements OnInit {
     }
   }
 
+  // Validador personalizado: confirma que las contraseñas coincidan
   passwordMatchValidator(form: FormGroup) {
     const password = form.get('password')?.value;
     const confirmPassword = form.get('confirmPassword')?.value;
@@ -60,13 +63,15 @@ export class WorkshopComponent implements OnInit {
     }
     return null;
   }
-
+ 
+ // Método que se ejecuta al enviar el formulario 
  onSubmit(): void {
   if (this.tallerForm.invalid) {
     this.markFormGroupTouched(this.tallerForm);
     return;
   }
 
+  // Construye el objeto con los datos del taller
   const tallerData = {
     nombre: this.tallerForm.get('nombre')?.value,
     cif: this.tallerForm.get('cif')?.value,
@@ -82,7 +87,7 @@ export class WorkshopComponent implements OnInit {
   this.isSubmitting = true;
   this.errorMsg = '';
 
-  // POST para registrar taller
+  // Si es un nuevo taller, realiza un POST
   if (this.esModoRegistro) {
     this.http.post<any>(this.baseUrl, tallerData).subscribe({
       next: (response) => {
@@ -100,7 +105,7 @@ export class WorkshopComponent implements OnInit {
       }
     });
   } else {
-    // PUT para actualizar taller existente
+    // Si es taller existente, realiza un PUT para actualizar
     const id = this.cliente?.id;
     if (!id) {
       this.errorMsg = 'No se pudo identificar el taller a actualizar.';
@@ -121,7 +126,7 @@ export class WorkshopComponent implements OnInit {
     });
   }
 }
-
+  // Método para eliminar el taller actual
   deleteTaller(): void {
     if (!this.cliente || !this.cliente.id) {
       console.error('No hay taller para eliminar.');

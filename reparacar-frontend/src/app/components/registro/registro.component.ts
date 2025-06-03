@@ -21,32 +21,32 @@ export class RegisterComponent implements OnInit {
   cliente: any;
 
   constructor(
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private http: HttpClient,
-    private router: Router
+    private fb: FormBuilder, // Constructor de formularios
+    private authService: AuthService, // Servicio de autenticación
+    private http: HttpClient, // Cliente HTTP para llamadas al backend
+    private router: Router  // Servicio de enrutamiento
   ) {}
 
   ngOnInit(): void {
-    this.initForm();
+    this.initForm();  // Inicializa el formulario
     let cliente = JSON.parse(localStorage.getItem('cliente')!);
     if(cliente){
       this.cliente = cliente;
-      this.registerForm.patchValue(cliente)
+      this.registerForm.patchValue(cliente)  // Rellena el formulario con los datos existentes
       this.showUserTypeModal=false;
     }
   }
 
-  // Método para manejar la selección del tipo de usuario
+  // Lógica para seleccionar el tipo de usuario y redireccionar
   selectUserType(userType: 'particular' | 'taller'): void {
     this.showUserTypeModal = false;
     
     if (userType === 'taller') {     
-      this.router.navigate(['/workshop']);
+      this.router.navigate(['/workshop']);  // Redirecciona a registro de taller
     }
 
     if (userType === 'particular') {     
-      this.router.navigate(['/register']);
+      this.router.navigate(['/register']); // Redirecciona a registro de cliente
     }
    
   }
@@ -55,6 +55,7 @@ export class RegisterComponent implements OnInit {
     this.router.navigate(['/home']);
   }
 
+  // Inicialización del formulario con validaciones para cada campo
   initForm(): void {
     this.registerForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(2)]],
@@ -73,6 +74,7 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  // Valida que los campos password y confirmPassword coincidan
   passwordMatchValidator(form: FormGroup) {
     const password = form.get('password')?.value;
     const confirmPassword = form.get('confirmPassword')?.value;
@@ -85,13 +87,14 @@ export class RegisterComponent implements OnInit {
     return null;
   }
 
+  // Procesa el envío del formulario: creación o edición de usuario
   onSubmit(): void {
     if (this.registerForm.invalid) {
       this.markFormGroupTouched(this.registerForm);
       return;
     }
     
-    // Crear el objeto de usuario a partir del formulario
+    // Construye el objeto de usuario a partir del formulario
     const userData = {
       nombre: this.registerForm.get('nombre')?.value,
       apellidos: this.registerForm.get('apellidos')?.value,
@@ -109,7 +112,7 @@ export class RegisterComponent implements OnInit {
     this.registerError = '';
 
     if(this.cliente){
-      // Actualizar cliente
+      // Actualiza los datos del cliente existente
       this.http.put<any>(this.baseUrl+"/"+`${this.cliente.id}`, userData).subscribe({
       next: (response) => {
         console.log('Registro exitoso', response);
@@ -118,7 +121,7 @@ export class RegisterComponent implements OnInit {
         if (token) {
           localStorage.setItem('auth_token', token);
         }
-
+this.router.navigate(['/home']);
         this.registerForm.reset();
       },
       error: (error) => {
@@ -137,7 +140,7 @@ export class RegisterComponent implements OnInit {
       }
     });
     }else{
-      // Crear cliente
+      // Crea un nuevo cliente
     this.http.post<any>(this.baseUrl, userData).subscribe({
       next: (response) => {
         console.log('Registro exitoso', response);
@@ -148,6 +151,7 @@ export class RegisterComponent implements OnInit {
         }
 
         this.registerForm.reset();
+        //localStorage.removeItem('cliente');
         this.router.navigate(['/appointment']);
       },
       error: (error) => {
@@ -167,7 +171,7 @@ export class RegisterComponent implements OnInit {
     });
   }  
 }
-
+  // Permite eliminar la cuenta del cliente actual
   deleteCliente(): void {
     if (!this.cliente || !this.cliente.id) {
       console.error('No hay cliente para eliminar.');
@@ -198,6 +202,7 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  // Maneja errores de registro o edición y establece mensajes apropiados
   handleError(error: any): void {
     console.error('Error en el registro', error);
     if (error.status === 409) {
