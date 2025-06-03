@@ -8,7 +8,7 @@ import com.reparacar.dto.LoginDTO;
 public interface ClienteService {
     
     // Crear un nuevo cliente
-    ClienteDTO crearCliente(ClienteDTO clienteDTO);
+    ClienteDTO crearCliente(ClienteDTO clienteDTO);   // Recibe un ClienteDTO con los datos necesarios y devuelve el cliente creado.
     
     // Obtener todos los clientes
     List<ClienteDTO> obtenerTodosClientes();
@@ -25,5 +25,6 @@ public interface ClienteService {
     // Buscar clientes por nombre o apellidos
     List<ClienteDTO> buscarClientes(String nombre, String apellidos);
     
-    Object login(LoginDTO login);
+    // Iniciar sesión (login)
+    Object login(LoginDTO login);       // Realiza autenticación de cliente con email y contraseña
 }

@@ -16,13 +16,15 @@ import com.reparacar.service.ClienteService;
 public class AuthenticationController {
 	
 	private final ClienteService clienteService;
+	
+	// Inyección del servicio ClienteService mediante el constructor
 	public AuthenticationController(ClienteService clienteService) {
 		this.clienteService = clienteService;
 	}
 		
 	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestBody LoginDTO request){
-		return ResponseEntity.ok((clienteService.login(request)));	
+	public ResponseEntity<?> login(@RequestBody LoginDTO request){  // Delegamos la autenticación al método login del servicio
+		return ResponseEntity.ok((clienteService.login(request)));	// Puede devolver un ClienteDTO o TallerDTO (según quién inicie sesión)		
 	}
 	
 }

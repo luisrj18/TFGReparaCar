@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("/api/clientes")
 public class ClienteController {
     
-    private final ClienteService clienteService;
+    private final ClienteService clienteService; // Inyección del servicio que contiene la lógica de negocio
     
     public ClienteController(ClienteService clienteService) {
         this.clienteService = clienteService;
@@ -22,8 +22,8 @@ public class ClienteController {
     // Crear un nuevo cliente
     @PostMapping
     public ResponseEntity<ClienteDTO> crearCliente(@RequestBody ClienteDTO clienteDTO) {
-        ClienteDTO nuevoCliente = clienteService.crearCliente(clienteDTO);
-        return new ResponseEntity<>(nuevoCliente, HttpStatus.CREATED);
+        ClienteDTO nuevoCliente = clienteService.crearCliente(clienteDTO); // Llama al servicio para crear un cliente
+        return new ResponseEntity<>(nuevoCliente, HttpStatus.CREATED);	   // Retorna el cliente creado	
     }
     
     // Obtener todos los clientes

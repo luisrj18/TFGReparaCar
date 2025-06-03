@@ -22,7 +22,7 @@ public class ClienteServiceImpl implements ClienteService {
     private final ClienteRepository clienteRepository;
     private final TallerRepository tallerRepository;
 
-
+    // Constructor para inyección de dependencias
     public ClienteServiceImpl(ClienteRepository clienteRepository,TallerRepository tallerRepository) {
         this.clienteRepository = clienteRepository;
 		this.tallerRepository = tallerRepository;
@@ -30,9 +30,9 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public ClienteDTO crearCliente(ClienteDTO clienteDTO) {
-        Cliente cliente = mapearAEntidad(clienteDTO);
-        Cliente clienteGuardado = clienteRepository.save(cliente);
-        return mapearADTO(clienteGuardado);
+        Cliente cliente = mapearAEntidad(clienteDTO); // Convertimos el DTO a entidad
+        Cliente clienteGuardado = clienteRepository.save(cliente); // Guardamos en la BD
+        return mapearADTO(clienteGuardado); // Devolvemos el DTO del cliente creado
     }
 
     @Override
@@ -56,7 +56,7 @@ public class ClienteServiceImpl implements ClienteService {
         Cliente cliente = clienteRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con ID: " + id));
         
-        // Actualizar los campos
+        // Se actualizan los campos permitidos
         cliente.setNombre(clienteDTO.getNombre());
         cliente.setApellidos(clienteDTO.getApellidos());
         cliente.setEmail(clienteDTO.getEmail());
@@ -65,8 +65,8 @@ public class ClienteServiceImpl implements ClienteService {
         cliente.setCodigoPostal(clienteDTO.getCodigoPostal());
         cliente.setCiudad(clienteDTO.getCiudad());
         
-        Cliente clienteActualizado = clienteRepository.save(cliente);
-        return mapearADTO(clienteActualizado);
+        Cliente clienteActualizado = clienteRepository.save(cliente); // Guardamos los cambios
+        return mapearADTO(clienteActualizado);  // Devolvemos el DTO actualizado
     }
 
     @Override
@@ -97,6 +97,7 @@ public class ClienteServiceImpl implements ClienteService {
                 .collect(Collectors.toList());
     }
     
+    // Login de cliente o taller
     public Object login(LoginDTO login) {
         Optional<Cliente> cliente = clienteRepository.findByEmailAndPassword(login.getEmail(), login.getPassword());
         if (cliente.isPresent()) {
@@ -111,7 +112,7 @@ public class ClienteServiceImpl implements ClienteService {
         throw new RuntimeException("Credenciales inválidas");
     }
     
-    // Método auxiliar para mapear de entidad a DTO
+    // Conversión de Cliente → ClienteDTO
     private ClienteDTO mapearADTO(Cliente cliente) {
         ClienteDTO clienteDTO = new ClienteDTO();
         clienteDTO.setId(cliente.getId());
@@ -127,7 +128,7 @@ public class ClienteServiceImpl implements ClienteService {
         return clienteDTO;
     }
     
-    // Método auxiliar para mapear de DTO a entidad
+    // Conversión de ClienteDTO → Cliente
     private Cliente mapearAEntidad(ClienteDTO clienteDTO) {
         Cliente cliente = new Cliente();
         cliente.setNombre(clienteDTO.getNombre());
