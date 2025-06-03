@@ -19,5 +19,7 @@ public interface CitasRepository extends JpaRepository<Citas, Long> {
     List<Citas> findByMatriculaContainingIgnoreCase(String matricula);
 
 	List<Citas> findByTallerId(Long tallerId);
+	
+	List<Citas> findByClienteId(Long clienteId);
 }
 

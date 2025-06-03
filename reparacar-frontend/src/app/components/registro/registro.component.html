@@ -10,7 +10,7 @@
       <div class="user-type-card" (click)="selectUserType('particular')">
         <div class="user-type-icon">
           <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path> <!--imagen vectorial en código-->
             <circle cx="12" cy="7" r="4"></circle>
           </svg>
         </div>
@@ -22,7 +22,7 @@
       <div class="user-type-card" (click)="selectUserType('taller')">
         <div class="user-type-icon">
           <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"></path>
+            <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"></path> <!--imagen vectorial en código-->
             <path d="m9 12 2 2 4-4"></path>
           </svg>
         </div>
@@ -282,6 +282,10 @@
           [disabled]="isSubmitting"
         >
           {{ isSubmitting ? 'Actualizando...' : 'Actualizar' }}
+        </button>
+
+        <button type="button" class="btn btn-danger" (click)="deleteCliente()" *ngIf="cliente">
+          Eliminar cuenta
         </button>
       </div>
       

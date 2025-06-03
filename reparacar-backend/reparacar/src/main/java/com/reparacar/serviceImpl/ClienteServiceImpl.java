@@ -97,6 +97,20 @@ public class ClienteServiceImpl implements ClienteService {
                 .collect(Collectors.toList());
     }
     
+    public Object login(LoginDTO login) {
+        Optional<Cliente> cliente = clienteRepository.findByEmailAndPassword(login.getEmail(), login.getPassword());
+        if (cliente.isPresent()) {
+            return mapearADTO(cliente.get());
+        }
+
+        Optional<Taller> taller = tallerRepository.findByEmailAndPassword(login.getEmail(), login.getPassword());
+        if (taller.isPresent()) {
+            return mapearADTOTaller(taller.get());
+        }
+
+        throw new RuntimeException("Credenciales inválidas");
+    }
+    
     // Método auxiliar para mapear de entidad a DTO
     private ClienteDTO mapearADTO(Cliente cliente) {
         ClienteDTO clienteDTO = new ClienteDTO();
@@ -113,6 +127,22 @@ public class ClienteServiceImpl implements ClienteService {
         return clienteDTO;
     }
     
+    // Método auxiliar para mapear de DTO a entidad
+    private Cliente mapearAEntidad(ClienteDTO clienteDTO) {
+        Cliente cliente = new Cliente();
+        cliente.setNombre(clienteDTO.getNombre());
+        cliente.setApellidos(clienteDTO.getApellidos());
+        cliente.setEmail(clienteDTO.getEmail());
+        cliente.setTelefono(clienteDTO.getTelefono());
+        cliente.setDireccion(clienteDTO.getDireccion());
+        cliente.setCodigoPostal(clienteDTO.getCodigoPostal());
+        cliente.setCiudad(clienteDTO.getCiudad());
+        cliente.setPassword(clienteDTO.getPassword());
+        cliente.setProvincia(clienteDTO.getProvincia());
+        return cliente;
+    }
+    
+    // Convierte un Taller a TallerDTO (usado en login)
     public TallerDTO mapearADTOTaller(Taller taller) {
         TallerDTO dto = new TallerDTO();
         dto.setId(taller.getId());
@@ -126,38 +156,6 @@ public class ClienteServiceImpl implements ClienteService {
         dto.setProvincia(taller.getProvincia());
         dto.setPassword(taller.getPassword());
         return dto;
-    }
-
-    
-    // Método auxiliar para mapear de DTO a entidad
-    private Cliente mapearAEntidad(ClienteDTO clienteDTO) {
-        Cliente cliente = new Cliente();
-        // No establecemos el ID para crear un nuevo cliente
-        // Para actualizaciones, el ID se gestiona en el método actualizarCliente
-        cliente.setNombre(clienteDTO.getNombre());
-        cliente.setApellidos(clienteDTO.getApellidos());
-        cliente.setEmail(clienteDTO.getEmail());
-        cliente.setTelefono(clienteDTO.getTelefono());
-        cliente.setDireccion(clienteDTO.getDireccion());
-        cliente.setCodigoPostal(clienteDTO.getCodigoPostal());
-        cliente.setCiudad(clienteDTO.getCiudad());
-        cliente.setPassword(clienteDTO.getPassword());
-        cliente.setProvincia(clienteDTO.getProvincia());
-        return cliente;
-    }
-
-    public Object login(LoginDTO login) {
-        Optional<Cliente> cliente = clienteRepository.findByEmailAndPassword(login.getEmail(), login.getPassword());
-        if (cliente.isPresent()) {
-            return mapearADTO(cliente.get());
-        }
-
-        Optional<Taller> taller = tallerRepository.findByEmailAndPassword(login.getEmail(), login.getPassword());
-        if (taller.isPresent()) {
-            return mapearADTOTaller(taller.get());
-        }
-
-        throw new RuntimeException("Credenciales inválidas");
-    }
+    }   
 
 }

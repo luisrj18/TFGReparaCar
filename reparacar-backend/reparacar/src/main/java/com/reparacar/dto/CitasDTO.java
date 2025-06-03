@@ -22,7 +22,7 @@ public class CitasDTO implements Serializable {
     private String servicio;
     private String descripcion;
     private String estado; // "pending", "confirmed", "cancelled", "completed"
-    
+    private String nombreTaller;
     private Long cliente_id;
     private Long taller_id;
 }

@@ -128,16 +128,6 @@
     <div class="citas-list-header">
       <h2>Mis Citas</h2>
       <div class="filter-controls">
-        <div class="filter-group">
-          <label for="filterStatus">Filtrar por:</label>
-          <select id="filterStatus" [(ngModel)]="filterStatus">
-            <option value="all">Todas</option>
-            <option value="pending">Pendientes</option>
-            <option value="confirmed">Confirmadas</option>
-            <option value="cancelled">Canceladas</option>
-            <option value="completed">Completadas</option>
-          </select>
-        </div>
         <button class="btn-sort" (click)="sortAppointmentsByDate()">
           Ordenar por fecha
         </button>
@@ -153,7 +143,7 @@
            class="citas-item citas-item-{{ appointment.estado }}">
         <div class="citas-item-header">
           <div class="citas-detail-label">Taller:</div>
-          <h3 class="citas-item-title"> {{ cliente.nombre }}</h3>
+          <h3 class="citas-item-title"> {{ appointment?.nombreTaller }}</h3>
          
         </div>
 

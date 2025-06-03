@@ -1,4 +1,8 @@
-/* Estilos del modal - se superpone sobre todo */
+/* ===========================================================
+  MODAL DE SELECCIÓN DE TIPO DE USUARIO
+=========================================================== */
+
+/* Filtro oscuro de fondo */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -14,15 +18,13 @@
   animation: fadeIn 0.3s ease-out;
 }
 
+/* Animación de entrada del fondo */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
+/* Contenedor principal del modal */
 .user-type-modal {
   background: white;
   border-radius: 10px;
@@ -35,6 +37,7 @@
   animation: slideUp 0.3s ease-out;
 }
 
+/* Animación del modal */
 @keyframes slideUp {
   from {
     transform: translateY(20px);
@@ -46,6 +49,7 @@
   }
 }
 
+/* Cabecera del modal */
 .modal-header {
   text-align: center;
   margin-bottom: 30px;
@@ -68,6 +72,7 @@
   opacity: 0.8;
 }
 
+/* Opciones del usuario (tarjetas) */
 .user-type-options {
   display: flex;
   gap: 20px;
@@ -119,6 +124,7 @@
   line-height: 1.5;
 }
 
+/* Botón para seleccionar tipo de usuario */
 .btn-user-type {
   width: 100%;
   padding: 12px 25px;
@@ -137,6 +143,7 @@
   transform: translateY(-1px);
 }
 
+/* Pie del modal con botón cancelar */
 .modal-footer {
   text-align: center;
   border-top: 1px solid #ddd;
@@ -159,7 +166,11 @@
   background-color: #d6dbdf;
 }
 
-/* Estilos existentes del formulario - manteniendo los originales */
+/* ===========================================================
+  FORMULARIO DE REGISTRO
+=========================================================== */
+
+/* Contenedor principal del formulario */
 .register-container {
   display: flex;
   justify-content: center;
@@ -178,6 +189,7 @@
   overflow: hidden;
 }
 
+/* Cabecera del formulario */
 .register-header {
   padding: 30px;
   background-color: #2c3e50;
@@ -197,10 +209,12 @@
   opacity: 0.8;
 }
 
+/* Contenedor del formulario */
 .register-form {
   padding: 30px;
 }
 
+/* Grupo de campos */
 .form-group {
   margin-bottom: 20px;
   width: 100%;
@@ -219,6 +233,7 @@
   }
 }
 
+/* Etiquetas de campos */
 label {
   display: block;
   margin-bottom: 6px;
@@ -226,6 +241,7 @@ label {
   color: #333;
 }
 
+/* Inputs de texto */
 input[type="text"],
 input[type="email"],
 input[type="password"],
@@ -246,16 +262,19 @@ input[type="tel"]:focus {
   outline: none;
 }
 
+/* Campo inválido */
 .is-invalid {
   border-color: #e74c3c !important;
 }
 
+/* Mensaje de error */
 .error-message {
   color: #e74c3c;
   font-size: 14px;
   margin-top: 5px;
 }
 
+/* Grupo de checkbox */
 .checkbox-group {
   margin: 20px 0;
 }
@@ -270,6 +289,7 @@ input[type="checkbox"] {
   transform: scale(1.2);
 }
 
+/* Alerta general de error (no usada explícitamente pero útil) */
 .alert-error {
   background-color: #ffe6e6;
   border: 1px solid #ffcccc;
@@ -279,13 +299,14 @@ input[type="checkbox"] {
   margin-bottom: 20px;
 }
 
+/* Acciones del formulario (botones) */
 .form-actions {
   display: flex;
   justify-content: space-between;
   margin-top: 30px;
 }
 
-.btn-primary, 
+.btn-primary,
 .btn-secondary {
   padding: 12px 25px;
   border-radius: 5px;
@@ -320,6 +341,7 @@ input[type="checkbox"] {
   background-color: #d6dbdf;
 }
 
+/* Enlace al login */
 .login-link {
   text-align: center;
   margin-top: 20px;
@@ -335,4 +357,3 @@ input[type="checkbox"] {
 .login-link a:hover {
   text-decoration: underline;
 }
-

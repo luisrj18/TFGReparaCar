@@ -2,6 +2,7 @@ package com.reparacar.serviceImpl;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -125,7 +126,15 @@ public class CitasServiceImpl implements CitasService {
         List<Citas> citas = citasRepository.findByTallerId(tallerId);
         return citas.stream().map(this::mapearADTO).toList();
     }
-
+    
+    @Override
+    public List<CitasDTO> buscarCitasPorClienteId(Long clienteId) {
+        List<Citas> citas = citasRepository.findByClienteId(clienteId);
+   
+        
+        return citas.stream().map(this::mapearADTO).toList();
+    }
+    
 
     // Métodos auxiliares de mapeo
     private CitasDTO mapearADTO(Citas cita) {
@@ -138,7 +147,7 @@ public class CitasServiceImpl implements CitasService {
         dto.setServicio(cita.getServicio());
         dto.setDescripcion(cita.getDescripcion());
         dto.setEstado(cita.getEstado());
-        
+        dto.setNombreTaller(cita.getTaller().getNombre());
         if (cita.getCliente() != null) {
             dto.setCliente_id(cita.getCliente().getId());
         }

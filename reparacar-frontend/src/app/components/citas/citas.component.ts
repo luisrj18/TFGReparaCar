@@ -18,6 +18,7 @@ interface Appointment {
   cliente_id?: number;
   taller_id: number;
   nombreTitular: string;
+  nombreTaller:string;
 }
 
 @Component({
@@ -107,7 +108,7 @@ export class AppointmentComponent implements OnInit {
     this.taller = JSON.parse(localStorage.getItem('taller')!);
     if (this.cliente) {
       this.clienteId = this.cliente.id;
-      this.loadAppointments(); // carga local para clientes
+      this.loadCitasDelCliente(); // carga local para clientes
     } else if (this.taller) {
       this.loadCitasDelTaller(); // carga desde backend para talleres
     }
@@ -297,6 +298,22 @@ export class AppointmentComponent implements OnInit {
         });
       }
 
+      loadCitasDelCliente(): void {
+  const cliente = JSON.parse(localStorage.getItem('cliente')!);
+  if (!cliente) return;
+
+  this.http.get<Appointment[]>(`${this.baseUrl}/buscar/cliente?clienteId=${cliente.id}`).subscribe({
+    next: (response) => {
+      this.appointments = response.map(cita => ({
+        ...cita,
+        fecha: new Date(cita.fecha)
+      }));
+    },
+    error: (error) => {
+      console.error('Error al cargar citas del cliente:', error);
+    }
+  });
+}
 
   getStatusLabel(estado: string): string {
         switch (estado) {

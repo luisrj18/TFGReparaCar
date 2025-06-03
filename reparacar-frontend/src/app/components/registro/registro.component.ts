@@ -16,7 +16,7 @@ export class RegisterComponent implements OnInit {
   registerForm!: FormGroup;
   isSubmitting = false;
   registerError = '';
-  showUserTypeModal = true; // Controla la visibilidad del modal
+  showUserTypeModal = true;
   private baseUrl = 'http://localhost:8080/api/clientes';
   cliente: any;
 
@@ -31,7 +31,7 @@ export class RegisterComponent implements OnInit {
     this.initForm();
     let cliente = JSON.parse(localStorage.getItem('cliente')!);
     if(cliente){
-      this.cliente= cliente;
+      this.cliente = cliente;
       this.registerForm.patchValue(cliente)
       this.showUserTypeModal=false;
     }
@@ -107,7 +107,9 @@ export class RegisterComponent implements OnInit {
     
     this.isSubmitting = true;
     this.registerError = '';
+
     if(this.cliente){
+      // Actualizar cliente
       this.http.put<any>(this.baseUrl+"/"+`${this.cliente.id}`, userData).subscribe({
       next: (response) => {
         console.log('Registro exitoso', response);
@@ -118,8 +120,6 @@ export class RegisterComponent implements OnInit {
         }
 
         this.registerForm.reset();
-        //localStorage.removeItem('cliente');
-        this.router.navigate(['/appointment']);
       },
       error: (error) => {
         console.error('Error en el registro', error);
@@ -137,6 +137,7 @@ export class RegisterComponent implements OnInit {
       }
     });
     }else{
+      // Crear cliente
     this.http.post<any>(this.baseUrl, userData).subscribe({
       next: (response) => {
         console.log('Registro exitoso', response);
@@ -147,7 +148,6 @@ export class RegisterComponent implements OnInit {
         }
 
         this.registerForm.reset();
-        //localStorage.removeItem('cliente');
         this.router.navigate(['/appointment']);
       },
       error: (error) => {
@@ -166,7 +166,49 @@ export class RegisterComponent implements OnInit {
       }
     });
   }  
+}
+
+  deleteCliente(): void {
+    if (!this.cliente || !this.cliente.id) {
+      console.error('No hay cliente para eliminar.');
+      return;
+    }
+
+    const confirmDelete = confirm('¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.');
+    if (!confirmDelete) return;
+
+    this.isSubmitting = true;
+    this.registerError = '';
+
+    this.http.delete(`${this.baseUrl}/${this.cliente.id}`).subscribe({
+      next: () => {
+        console.log('Cliente eliminado correctamente');
+        localStorage.removeItem('cliente');
+        localStorage.removeItem('auth_token');
+        this.registerForm.reset();
+        this.router.navigate(['/home']);
+      },
+      error: (error) => {
+        console.error('Error al eliminar el cliente:', error);
+        this.registerError = 'Hubo un error al intentar eliminar la cuenta. Inténtelo de nuevo más tarde.';
+      },
+      complete: () => {
+        this.isSubmitting = false;
+      }
+    });
   }
+
+  handleError(error: any): void {
+    console.error('Error en el registro', error);
+    if (error.status === 409) {
+      this.registerError = 'El correo electrónico ya está registrado.';
+    } else if (error.error?.message) {
+      this.registerError = error.error.message;
+    } else {
+      this.registerError = 'Ha ocurrido un error durante el registro. Inténtelo nuevamente más tarde.';
+    }
+  }
+
 
   markFormGroupTouched(formGroup: FormGroup): void {
     Object.values(formGroup.controls).forEach(control => {

@@ -16,7 +16,8 @@ export class WorkshopComponent implements OnInit {
   isSubmitting = false;
   errorMsg = '';
   private baseUrl = 'http://localhost:8080/api/talleres';
-  cliente:any
+  cliente: any;
+  esModoRegistro: boolean = true;
 
   constructor(
     private fb: FormBuilder,
@@ -38,46 +39,51 @@ export class WorkshopComponent implements OnInit {
       confirmPassword: ['', Validators.required],
       acceptTerms: [false, Validators.requiredTrue]
     }, { validators: this.passwordMatchValidator });
-    let cliente = JSON.parse(localStorage.getItem('cliente')!);
-    if(cliente){
-      this.cliente= cliente;
-      this.tallerForm.patchValue(cliente)
+
+    const storedCliente = localStorage.getItem('cliente');
+    if (storedCliente) {
+      this.cliente = JSON.parse(storedCliente);
+      this.esModoRegistro = !this.cliente?.cif;
+      this.tallerForm.patchValue(this.cliente);
+    } else {
+      this.cliente = {};
+      this.esModoRegistro = true;
     }
   }
 
   passwordMatchValidator(form: FormGroup) {
     const password = form.get('password')?.value;
     const confirmPassword = form.get('confirmPassword')?.value;
-
     if (password !== confirmPassword) {
       form.get('confirmPassword')?.setErrors({ passwordMismatch: true });
       return { passwordMismatch: true };
     }
-
     return null;
   }
 
-  onSubmit(): void {
-    if (this.tallerForm.invalid) {
-      this.markFormGroupTouched(this.tallerForm);
-      return;
-    }
+ onSubmit(): void {
+  if (this.tallerForm.invalid) {
+    this.markFormGroupTouched(this.tallerForm);
+    return;
+  }
 
-    const tallerData = {
-      nombre: this.tallerForm.get('nombre')?.value,
-      cif: this.tallerForm.get('cif')?.value,
-      email: this.tallerForm.get('email')?.value,
-      telefono: this.tallerForm.get('telefono')?.value,
-      direccion: this.tallerForm.get('direccion')?.value,
-      codigoPostal: this.tallerForm.get('codigoPostal')?.value,
-      ciudad: this.tallerForm.get('ciudad')?.value,
-      provincia: this.tallerForm.get('provincia')?.value,
-      password: this.tallerForm.get('password')?.value
-    };
+  const tallerData = {
+    nombre: this.tallerForm.get('nombre')?.value,
+    cif: this.tallerForm.get('cif')?.value,
+    email: this.tallerForm.get('email')?.value,
+    telefono: this.tallerForm.get('telefono')?.value,
+    direccion: this.tallerForm.get('direccion')?.value,
+    codigoPostal: this.tallerForm.get('codigoPostal')?.value,
+    ciudad: this.tallerForm.get('ciudad')?.value,
+    provincia: this.tallerForm.get('provincia')?.value,
+    password: this.tallerForm.get('password')?.value
+  };
 
-    this.isSubmitting = true;
-    this.errorMsg = '';
+  this.isSubmitting = true;
+  this.errorMsg = '';
 
+  // POST para registrar taller
+  if (this.esModoRegistro) {
     this.http.post<any>(this.baseUrl, tallerData).subscribe({
       next: (response) => {
         localStorage.setItem('cliente', JSON.stringify(response));
@@ -85,11 +91,59 @@ export class WorkshopComponent implements OnInit {
         this.router.navigate(['/home']);
       },
       error: (error) => {
-        if (error.status === 409) {
-          this.errorMsg = 'El CIF o correo ya está registrado.';
-        } else {
-          this.errorMsg = 'Ha ocurrido un error. Inténtalo de nuevo.';
-        }
+        this.errorMsg = error.status === 409
+          ? 'El CIF o correo ya está registrado.'
+          : 'Ha ocurrido un error. Inténtalo de nuevo.';
+      },
+      complete: () => {
+        this.isSubmitting = false;
+      }
+    });
+  } else {
+    // PUT para actualizar taller existente
+    const id = this.cliente?.id;
+    if (!id) {
+      this.errorMsg = 'No se pudo identificar el taller a actualizar.';
+      this.isSubmitting = false;
+      return;
+    }
+
+    this.http.put<any>(`${this.baseUrl}/${id}`, tallerData).subscribe({
+      next: (response) => {
+        localStorage.setItem('cliente', JSON.stringify(response));
+      },
+      error: (error) => {
+        this.errorMsg = 'Error al actualizar el taller. Intenta nuevamente.';
+      },
+      complete: () => {
+        this.isSubmitting = false;
+      }
+    });
+  }
+}
+
+  deleteTaller(): void {
+    if (!this.cliente || !this.cliente.id) {
+      console.error('No hay taller para eliminar.');
+      return;
+    }
+
+    const confirmDelete = confirm('¿Estás seguro de que deseas eliminar tu taller? Esta acción no se puede deshacer.');
+    if (!confirmDelete) return;
+
+    this.isSubmitting = true;
+    this.errorMsg = '';
+
+    this.http.delete(`${this.baseUrl}/${this.cliente.id}`).subscribe({
+      next: () => {
+        localStorage.removeItem('cliente');
+        localStorage.removeItem('auth_token');
+        this.tallerForm.reset();
+        this.router.navigate(['/home']);
+      },
+      error: (error) => {
+        console.error('Error al eliminar el taller:', error);
+        this.errorMsg = 'Hubo un error al intentar eliminar el taller. Inténtelo de nuevo más tarde.';
       },
       complete: () => {
         this.isSubmitting = false;

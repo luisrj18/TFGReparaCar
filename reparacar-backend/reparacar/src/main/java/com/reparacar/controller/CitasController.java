@@ -1,6 +1,5 @@
 package com.reparacar.controller;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -93,5 +92,13 @@ public class CitasController {
         List<CitasDTO> citas = citasService.buscarCitasPorTallerId(tallerId);
         return new ResponseEntity<>(citas, HttpStatus.OK);
     }
+    
+  //Buscar Citas por cliente_id
+    @GetMapping("/buscar/cliente")
+    public ResponseEntity<List<CitasDTO>> buscarPorClienteId(@RequestParam Long clienteId) {
+        List<CitasDTO> citas = citasService.buscarCitasPorClienteId(clienteId);
+        return new ResponseEntity<>(citas, HttpStatus.OK);
+        
+    }  
 
 }
